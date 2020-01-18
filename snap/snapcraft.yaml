@@ -1,0 +1,111 @@
+---
+name: wlroots
+base: core18
+version: '0.9.1-1-0dev1'
+summary: A modular Wayland compositor library https://swaywm.org
+description: |
+  Pluggable, composable, unopinionated modules for building a Wayland compositor; or about 50,000 lines of code you were going to write anyway.
+
+grade: devel
+confinement: devmode
+
+build-packages:
+  - cmake # meson likes cmake
+  - ctags # meson
+  - pkgconf
+  - quilt
+
+parts:
+  ## TODO: split out to wayland-snap ...
+  wayland-protocols:
+    source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
+    source-tag: '1.18'
+    source-depth: 1
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+    build-packages:
+      - libwayland-bin
+
+  wlroots:
+    after: [ wayland-protocols ]
+    source: https://github.com/swaywm/wlroots.git
+    source-tag: '0.9.1'
+    source-depth: 1
+    plugin: meson
+    meson-version: 0.52.0
+    meson-parameters:
+      - --prefix=/usr
+      - -Dfreerdp=disabled
+      - -Dlibcap=enabled
+      - -Dlogind=enabled
+      - -Dlogind-provider=systemd
+      - -Dxcb-errors=auto
+      - -Dxcb-icccm=auto
+      - -Dxwayland=enabled
+      - -Dx11-backend=enabled
+      - -Dexamples=false
+    build-packages:
+      - libwayland-dev
+      - libegl1-mesa-dev
+      - libgles2-mesa-dev
+      - libgbm-dev
+      - libinput-dev
+      - libxcb1-dev
+      - libxcb-composite0-dev
+      - libxcb-icccm4-dev
+      - libxcb-image0-dev
+      - libxcb-render0-dev
+      - libxcb-xfixes0-dev
+      - libxcb-xinput-dev
+      - libxkbcommon-dev
+      - libpixman-1-dev
+      - libpng-dev
+      - libsystemd-dev
+      - libcap-dev
+    # stage-packages: ## INFO: FIXME: report from snapcraft
+    #   - libdrm2
+    #   - libegl1
+    #   - libevdev2
+    #   - libgbm1
+    #   - libgles2
+    #   - libglvnd0
+    #   - libgudev-1.0-0
+    #   - libinput10
+    #   - libmtdev1
+    #   - libpixman-1-0
+    #   - libwacom2
+    #   - libwayland-client0
+    #   - libwayland-egl1
+    #   - libwayland-server0
+    #   - libx11-6
+    #   - libx11-xcb1
+    #   - libxau6
+    #   - libxcb-composite0
+    #   - libxcb-icccm4
+    #   - libxcb-render0
+    #   - libxcb-xfixes0
+    #   - libxcb-xinput0
+    #   - libxcb1
+    #   - libxdmcp6
+    #   - libxkbcommon0
+    # stage-packages: ## INFO: FIXME: previous minimal packages
+    #   - libdrm2
+    #   - libegl1
+    #   - libevdev2
+    #   - libgbm1
+    #   - libgles2
+    #   - libglvnd0
+    #   - libgudev-1.0-0
+    #   - libinput10
+    #   - libmtdev1
+    #   - libpixman-1-0
+    #   - libwacom2
+    #   - libxcb-composite0
+    #   - libxcb-render0
+    #   - libxkbcommon0
+    #   - libwinpr2-2
+    #   - libxcb-icccm4
+    #   - libxcb-xinput0
+    stage:
+      - -usr/share/doc
+      - -usr/share/man

@@ -1,13 +1,13 @@
 ---
 name: wlroots
 base: core18
-version: '0.9.1-1-0dev1'
+version: '0.9.1-1-0dev2'
 summary: A modular Wayland compositor library https://swaywm.org
 description: |
   Pluggable, composable, unopinionated modules for building a Wayland compositor; or about 50,000 lines of code you were going to write anyway.
 
-grade: devel
-confinement: devmode
+grade: stable
+confinement: strict
 
 build-packages:
   - cmake # meson likes cmake
@@ -25,6 +25,7 @@ parts:
     configflags: [ --prefix=/usr ]
     build-packages:
       - libwayland-bin
+
 
   wlroots:
     after: [ wayland-protocols ]
@@ -109,3 +110,7 @@ parts:
     stage:
       - -usr/share/doc
       - -usr/share/man
+      
+      
+
+
